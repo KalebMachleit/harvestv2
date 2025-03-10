@@ -9,9 +9,11 @@
 /* Begin PBXBuildFile section */
 		0C80B921A6F3F58F76C31292 /* libPods-harvestv2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-harvestv2.a */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
+		5858AEB438564EB99FF4B6B7 /* COPYRIGHT.txt in Resources */ = {isa = PBXBuildFile; fileRef = 7D4C939358524183BC1E6D6A /* COPYRIGHT.txt */; };
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		83450F3EA9A856C442BEE8B8 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
+		F33846BC4D2B4918B4A94BD4 /* arialroundedmtbold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6AA5023822DE4F4F8B827CF2 /* arialroundedmtbold.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,7 +24,9 @@
 		3B4392A12AC88292D35C810B /* Pods-harvestv2.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-harvestv2.debug.xcconfig"; path = "Target Support Files/Pods-harvestv2/Pods-harvestv2.debug.xcconfig"; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-harvestv2.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-harvestv2.release.xcconfig"; path = "Target Support Files/Pods-harvestv2/Pods-harvestv2.release.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-harvestv2.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-harvestv2.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6AA5023822DE4F4F8B827CF2 /* arialroundedmtbold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = arialroundedmtbold.ttf; path = "../assets/fonts/Arial Rounded MT Bold/arialroundedmtbold.ttf"; sourceTree = "<group>"; };
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = harvestv2/AppDelegate.swift; sourceTree = "<group>"; };
+		7D4C939358524183BC1E6D6A /* COPYRIGHT.txt */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = COPYRIGHT.txt; path = "../assets/fonts/Arial Rounded MT Bold/COPYRIGHT.txt"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = harvestv2/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -51,6 +55,16 @@
 			name = harvestv2;
 			sourceTree = "<group>";
 		};
+		17A1785B640C475786B38E07 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				6AA5023822DE4F4F8B827CF2 /* arialroundedmtbold.ttf */,
+				7D4C939358524183BC1E6D6A /* COPYRIGHT.txt */,
+			);
+			name = Resources;
+			path = "";
+			sourceTree = "<group>";
+		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -75,6 +89,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
+				17A1785B640C475786B38E07 /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -161,6 +176,8 @@
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				83450F3EA9A856C442BEE8B8 /* PrivacyInfo.xcprivacy in Resources */,
+				F33846BC4D2B4918B4A94BD4 /* arialroundedmtbold.ttf in Resources */,
+				5858AEB438564EB99FF4B6B7 /* COPYRIGHT.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

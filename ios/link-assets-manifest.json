@@ -1,0 +1,13 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "assets/fonts/Arial Rounded MT Bold/COPYRIGHT.txt",
+      "sha1": "8fa2282d7f4ecd3a8df33a42b69d260e0e1baae2"
+    },
+    {
+      "path": "assets/fonts/Arial Rounded MT Bold/arialroundedmtbold.ttf",
+      "sha1": "d7a980ae844b8f90d67dbc2a5abf083f7f5c39b5"
+    }
+  ]
+}
