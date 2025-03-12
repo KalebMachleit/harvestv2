@@ -25,6 +25,7 @@ export type RootStackParamList = {
   Profile: { name: string }, 
   UserRegistration: undefined,
   UserLogin: undefined
+  VendorSetup: undefined
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
