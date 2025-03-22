@@ -1,4 +1,4 @@
-import { View, Image, Text, StyleSheet, Touchable, TouchableOpacity } from 'react-native';
+import { View, Image, Text, StyleSheet, Touchable, TouchableOpacity, Button } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -16,7 +16,7 @@ type Props = {
 
 export default function Home({navigation}: Props) {
     const [isLoading, setIsLoading] = useState(true);
-    const [data, setData] = useState(null);
+    const [data, setData] = useState(undefined);
 
     useEffect(() => {
         const loadData = async () => {
@@ -32,13 +32,15 @@ export default function Home({navigation}: Props) {
         loadData()
     }, [])
     if (isLoading) {
-        return (<View>
+        return (
+        <View>
             <Text>loading</Text>
         </View>)
     }
     return(
         <View>
             <Text style={MainStyles.header1}>Name: {data[1][1]} {data[2][1]}</Text>
+            <Button title={"test page"} onPress={() => { navigation.navigate('Test')}}> </Button>
         </View>
     )
 }

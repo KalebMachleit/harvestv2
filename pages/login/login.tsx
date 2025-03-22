@@ -3,6 +3,7 @@ import React, { ReactElement, useState, useEffect } from "react";
 import { Button, StyleSheet, TextInput, Alert } from "react-native";
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../App';
+import CookieManager from "@react-native-cookies/cookies";
 
 type LoginScreenNavigationProp = StackNavigationProp<
     RootStackParamList,
@@ -74,8 +75,18 @@ export const UserLogin = ({ navigation }: Props): ReactElement => {
                 throw new Error
             }
 
-            const currentTime = new Date().getTime() + (1000 * 60 * 3)
+            const currentTime = new Date().getTime() + (1000 * 60 * 60)
             const cookieTime = new Date(currentTime).toISOString()
+
+            CookieManager.set('http://localhost:5050', {
+                name: 'SessionID',
+                value: token,
+                path: '/',
+                version: '1',
+                expires: cookieTime
+              }).then((done) => {
+                console.log('CookieManager.set =>', done);
+              });
 
             await AsyncStorage.multiSet(
                 profileData

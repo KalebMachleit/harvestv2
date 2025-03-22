@@ -1,8 +1,13 @@
+import React, { useEffect, useState } from 'react';
+import { Alert, Modal, StyleSheet, Text, Pressable, View, SectionList, TouchableOpacity, TextInput, Button } from 'react-native';
+import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../App';
-import { View, TextInput, StyleSheet, Alert, Button } from 'react-native';
-import { useState, useEffect } from 'react';
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { MainStyles } from '../../assets/mainStyles';
+import { FruitTag } from '../../components/FruitTag';
+import { produceList } from '../../assets/produceList'
+import _ from 'lodash'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type VendorSetupScreenNavigationProp = StackNavigationProp<
     RootStackParamList,
@@ -16,51 +21,37 @@ type Props = {
 export const VendorSetup = ({ navigation }: Props) => {
     const [name, setName] = useState("")
     const [address, setAddress] = useState("")
-    const [selling, setSelling] = useState([])
     const [bio, setBio] = useState("")
     const [email, setEmail] = useState([])
-    const [authToken, setAuthToken] = useState('')
+    const [modalVisible, setModalVisible] = useState(false);
+    const [selling, setSelling] = useState<string[]>([])
+    const [search, setSearch] = useState('')
+    const [list, setList] = useState(produceList)
 
-    useEffect(() => {
-        async function addUserCreds() {
-            try {
-                const userEmail = await AsyncStorage.getItem('email')
-                const token = await AsyncStorage.getItem('auth_token')
-                const newArray = email.push(userEmail)
-                setEmail(newArray)
-                setAuthToken(token)
-            } catch (err) {
-                Alert.alert('Sorry, it appears there was an issue getting your login info')
-                console.log(err)
-            }
-        }
-        addUserCreds()
-    }, [])
+   useEffect(() => {
+    async function getEmail() {
+        const pullEmail = await AsyncStorage.getItem('email')
+        setEmail(pullEmail)
+    }
+    getEmail()
+   }, [])
 
     const doVendorSetup = async () => {
-        // Note that these values come from state variables that we've declared before
-        const emailValue: Array<string> = email;
-        const addressValue: string = address;
-        const bioValue: string = bio;
-        const nameValue: string = name;
-        const sellingValue: Array<string> = selling;
-
         try {
-            const response = await fetch('http://localhost:5050//v1/user/vendor/register', {
+            const response = await fetch('http://localhost:5050/v1/user/vendor/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Set-Cookie': authToken
                 },
                 body: JSON.stringify({
-                    name: nameValue,
-                    address: addressValue,
-                    selling: sellingValue,
-                    bio: bioValue,
-                    emails: emailValue
+                    name: name,
+                    address: address,
+                    selling: selling,
+                    bio: bio,
+                    emails: email
                 })
             })
-
+            console.log(response)
             const data = await response.json()
             console.log(data)
 
@@ -90,6 +81,29 @@ export const VendorSetup = ({ navigation }: Props) => {
         }
     };
 
+    function filterIt(searchKey: string) {
+        const newList = _.cloneDeep(produceList)
+        console.log(searchKey)
+
+        if (searchKey == '') {
+            console.log('empty')
+            return produceList
+        }
+
+        return newList.filter(function (obj) {
+            const thing = obj.data.filter(function (key) {
+                return key.toLowerCase().includes(searchKey.toLowerCase())
+            })
+            if (thing.length == 0) {
+                return
+            } else {
+                console.log(thing)
+                obj.data = thing
+                return obj
+            }
+        });
+    }
+
     return (
         <View>
             <TextInput
@@ -109,7 +123,53 @@ export const VendorSetup = ({ navigation }: Props) => {
                 onChangeText={(text) => setBio(text)}
                 autoCapitalize={"none"}
             />
-            <Button title={"Sign Up"} onPress={() => { doVendorSetup() }} />
+            <Button title={"Sign Up"} onPress={() => { setModalVisible(true) }} />
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                    Alert.alert('Modal has been closed.');
+                    setModalVisible(!modalVisible);
+                }}>
+                <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                        <Pressable
+                            style={[styles.button, styles.buttonClose]}
+                            onPress={() => {setModalVisible(!modalVisible); doVendorSetup(); navigation.navigate('Home')}}>
+                            <Text style={styles.textStyle}>Hide Modal</Text>
+                        </Pressable>
+                        <View>
+                            <TextInput placeholder='Search' value={search} onChangeText={setSearch} autoCapitalize='none' style={{ width: '80%' }}></TextInput>
+                            <Pressable
+                                style={[styles.button, styles.buttonClose]}
+                                onPress={() => setList(filterIt(search))}>
+                                <Text style={styles.textStyle}>Search</Text>
+                            </Pressable>
+                        </View>
+                        <View style={styles.sellingList}>
+                            {
+                                selling.map(x => (
+                                    <Text key={x}>{x}</Text>
+                                ))
+                            }
+                        </View>
+
+                        <SectionList
+                            sections={list}
+                            keyExtractor={(item, index) => item + index}
+                            renderItem={({ item, section }) => (
+                                <FruitTag name={item} color={section.color} func={() => { setSelling([...selling, item]) }}></FruitTag>
+                            )}
+                            renderSectionHeader={({ section: { title } }) => (
+                                <Text>{title}</Text>
+                            )}
+                        >
+
+                        </SectionList>
+                    </View>
+                </View>
+            </Modal>
         </View>
     )
 }
@@ -119,5 +179,53 @@ const styles = StyleSheet.create({
         height: 40,
         marginBottom: 10,
         backgroundColor: '#fff',
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+    },
+    modalView: {
+        margin: 0,
+        backgroundColor: 'white',
+        borderRadius: 20,
+        padding: 35,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+        width: '100%',
+        height: '85%'
+    },
+    button: {
+        borderRadius: 20,
+        padding: 10,
+        elevation: 2,
+    },
+    buttonOpen: {
+        backgroundColor: '#F194FF',
+    },
+    buttonClose: {
+        backgroundColor: '#2196F3',
+    },
+    textStyle: {
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
+    modalText: {
+        marginBottom: 15,
+        textAlign: 'center',
+    },
+    searchBar: {
+        flexDirection: 'row'
+    },
+    sellingList: {
+
     }
 });

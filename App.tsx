@@ -19,13 +19,15 @@ import { UserRegistration } from './pages/login/register';
 import Home from './pages/home';
 import { UserLogin } from './pages/login/login';
 import { VendorSetup } from './pages/login/vendorsetup';
+import { TestPage } from './pages/testpage';
 
 export type RootStackParamList = {
   Home: undefined, // undefined because you aren't passing any params to the home screen
   Profile: { name: string }, 
   UserRegistration: undefined,
-  UserLogin: undefined
-  VendorSetup: undefined
+  UserLogin: undefined,
+  VendorSetup: undefined,
+  Test: undefined
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -59,6 +61,11 @@ function App(): React.JSX.Element {
           name="Home"
           component={Home}
           options={{title: 'Welcome'}}
+        />
+        <Stack.Screen
+          name="Test"
+          component={TestPage}
+          options={{title: 'huh?'}}
         />
       </Stack.Navigator>
     </NavigationContainer>

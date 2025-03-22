@@ -4,6 +4,7 @@ import { Button, StyleSheet, TextInput, Alert, Modal, View, Text } from "react-n
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../App';
 import { MainStyles } from "../../assets/mainStyles";
+import CookieManager from "@react-native-cookies/cookies";
 
 type UserRegistrationScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -43,21 +44,21 @@ export const UserRegistration = ({ navigation }: Props): ReactElement => {
             })
 
             const data = await response.json()
-            const profile = data.data[0]
-            const profileKeys = Object.keys(profile)
-            let profileData: any = []
-            for (let x in profileKeys) {
-                profileData.push([profileKeys[x], profile[profileKeys[x]]])
-            }
-            profileData.pop()
+            // const profile = data.data[0]
+            // const profileKeys = Object.keys(profile)
+            // let profileData: any = []
+            // for (let x in profileKeys) {
+            //     profileData.push([profileKeys[x], profile[profileKeys[x]]])
+            // }
+            // profileData.pop()
 
             if (!response.ok) {
-                Alert.alert(data.message)
+                throw new Error(data.message)
             }
 
-            await AsyncStorage.multiSet(
-                profileData
-            )
+            // await AsyncStorage.multiSet(
+            //     profileData
+            // )
 
             setModalVisible(true)
 
@@ -67,6 +68,63 @@ export const UserRegistration = ({ navigation }: Props): ReactElement => {
             console.log(err)
         }
     };
+
+    const doUserLogin = async () => {
+        const emailValue: string = email;
+        const passwordValue: string = password;
+        try {
+            const response = await fetch('http://localhost:5050/v1/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'same-origin',
+                body: JSON.stringify({
+                    email: emailValue,
+                    password: passwordValue
+                })
+            })
+
+            //get profile info from response and format it for AsyncStorage
+            const data = await response.json()
+            const token = data.token
+            // console.log(token)
+            const profile = data.data[0]
+            const profileKeys = Object.keys(profile)
+            let profileData: any = []
+            for (let x in profileKeys) {
+                profileData.push([profileKeys[x], profile[profileKeys[x]]])
+            }
+            profileData.pop()
+            profileData.push(['user_token', token])
+
+            if (!response.ok) {
+                console.log('hi')
+                Alert.alert(data.message)
+                throw new Error
+            }
+
+            const currentTime = new Date().getTime() + (1000 * 60 * 60)
+            const cookieTime = new Date(currentTime).toISOString()
+
+            CookieManager.set('http://localhost:5050', {
+                name: 'SessionID',
+                value: token,
+                path: '/',
+                version: '1',
+                expires: cookieTime
+              }).then((done) => {
+                console.log('CookieManager.set =>', done);
+              });
+
+            await AsyncStorage.multiSet(
+                profileData
+            )
+        } catch (err) {
+            Alert.alert('Sign in failed :(')
+            console.log(err)
+        }
+    }
 
     return (
         <>
@@ -100,14 +158,14 @@ export const UserRegistration = ({ navigation }: Props): ReactElement => {
             <Button title={"Sign Up"} onPress={() => { doUserRegistration() }} />
             <Modal
             animationType="slide"
-            transparent={true}
+            transparent={false}
             visible={isModalVisible}
             style={styles.toVendorSetup}
             >
                 <View>
                     <Text style={MainStyles.header1}>Would you like to set up a store?</Text>
-                    <Button title={"Yes"} onPress={() => { setModalVisible(false); navigation.navigate('VendorSetup') }} />
-                    <Button title={"No"} onPress={() => { setModalVisible(false); navigation.navigate('Home') }} />
+                    <Button title={"Yes"} onPress={() => { doUserLogin(); setModalVisible(false); navigation.navigate('VendorSetup') }} />
+                    <Button title={"No"} onPress={() => { doUserLogin(); setModalVisible(false); navigation.navigate('Home') }} />
                     <Text style={MainStyles.subText}>You can set this up later</Text>
                 </View>
             </Modal>
@@ -122,6 +180,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
     },
     toVendorSetup: {
-        top: 'auto',
+        flex: 1
     }
 });
