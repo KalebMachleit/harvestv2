@@ -4,7 +4,7 @@ import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../App';
 import { MainStyles } from '../../assets/mainStyles';
-import { FruitTag } from '../../components/FruitTag';
+import { FruitTagPressable, FruitTagStatic } from '../../components/FruitTag';
 import { produceList } from '../../assets/produceList'
 import _ from 'lodash'
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -18,23 +18,29 @@ type Props = {
     navigation: VendorSetupScreenNavigationProp;
 };
 
+type SellingListProps =
+    {
+        name: string,
+        color: string
+    }
+
 export const VendorSetup = ({ navigation }: Props) => {
     const [name, setName] = useState("")
     const [address, setAddress] = useState("")
     const [bio, setBio] = useState("")
     const [email, setEmail] = useState([])
     const [modalVisible, setModalVisible] = useState(false);
-    const [selling, setSelling] = useState<string[]>([])
+    const [selling, setSelling] = useState<SellingListProps[]>([])
     const [search, setSearch] = useState('')
     const [list, setList] = useState(produceList)
 
-   useEffect(() => {
-    async function getEmail() {
-        const pullEmail = await AsyncStorage.getItem('email')
-        setEmail(pullEmail)
-    }
-    getEmail()
-   }, [])
+    useEffect(() => {
+        async function getEmail() {
+            const pullEmail = await AsyncStorage.getItem('email')
+            setEmail(pullEmail)
+        }
+        getEmail()
+    }, [])
 
     const doVendorSetup = async () => {
         try {
@@ -123,7 +129,16 @@ export const VendorSetup = ({ navigation }: Props) => {
                 onChangeText={(text) => setBio(text)}
                 autoCapitalize={"none"}
             />
-            <Button title={"Sign Up"} onPress={() => { setModalVisible(true) }} />
+            <Text style={MainStyles.header1}>Selling</Text>
+            <View style={styles.sellingList}>
+                {
+                    selling.map(x => (
+                        <FruitTagStatic key={x.name} color={x.color} name={x.name} ></FruitTagStatic>
+                    ))
+                }
+                <Button onPress={() => setModalVisible(!modalVisible)} title='Add'></Button>
+            </View>
+            <Button title={"Sign Up"} onPress={() => { doVendorSetup(); navigation.navigate('Home') }} />
             <Modal
                 animationType="slide"
                 transparent={true}
@@ -136,7 +151,7 @@ export const VendorSetup = ({ navigation }: Props) => {
                     <View style={styles.modalView}>
                         <Pressable
                             style={[styles.button, styles.buttonClose]}
-                            onPress={() => {setModalVisible(!modalVisible); doVendorSetup(); navigation.navigate('Home')}}>
+                            onPress={() => { setModalVisible(!modalVisible); }}>
                             <Text style={styles.textStyle}>Hide Modal</Text>
                         </Pressable>
                         <View>
@@ -150,7 +165,7 @@ export const VendorSetup = ({ navigation }: Props) => {
                         <View style={styles.sellingList}>
                             {
                                 selling.map(x => (
-                                    <Text key={x}>{x}</Text>
+                                    <Text key={x.name}>{x.name}</Text>
                                 ))
                             }
                         </View>
@@ -159,7 +174,7 @@ export const VendorSetup = ({ navigation }: Props) => {
                             sections={list}
                             keyExtractor={(item, index) => item + index}
                             renderItem={({ item, section }) => (
-                                <FruitTag name={item} color={section.color} func={() => { setSelling([...selling, item]) }}></FruitTag>
+                                <FruitTagPressable name={item} color={section.color} func={() => { if (!selling.includes({ name: item, color: section.color })) { setSelling([...selling, { name: item, color: section.color }]) } }}></FruitTagPressable>
                             )}
                             renderSectionHeader={({ section: { title } }) => (
                                 <Text>{title}</Text>

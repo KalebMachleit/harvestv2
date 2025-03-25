@@ -156,6 +156,7 @@ export const UserRegistration = ({ navigation }: Props): ReactElement => {
                 onChangeText={(text) => setLastName(text)}
             />
             <Button title={"Sign Up"} onPress={() => { doUserRegistration() }} />
+            <Button title={"bypass login"} onPress={() => { navigation.navigate('VendorSetup') }} />
             <Modal
             animationType="slide"
             transparent={false}

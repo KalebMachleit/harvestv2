@@ -1,25 +1,40 @@
-import { StyleSheet, Text, TouchableOpacity } from "react-native"
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native"
 
-interface FruitTagProps {
-    name: string,
-    color: string
-    func: Function
-  }
-  
-export const FruitTag = ({name, color, func}: FruitTagProps) => {
-    return (
-      <TouchableOpacity style={[styles.fruitTag, {backgroundColor: color}]} onPressOut={func}>
-        <Text>
-          {name}
-        </Text>
-      </TouchableOpacity>
-    )
-  }
+interface FruitTagPressableProps {
+  name: string,
+  color: string
+  func: Function
+}
+
+interface FruitTagStaticProps {
+  name: string,
+  color: string
+}
+
+export const FruitTagPressable = ({ name, color, func }: FruitTagPressableProps) => {
+  return (
+    <TouchableOpacity style={[styles.fruitTag, { backgroundColor: color }]} onPressOut={func}>
+      <Text>
+        {name}
+      </Text>
+    </TouchableOpacity>
+  )
+}
+
+export const FruitTagStatic = ({ name, color }: FruitTagStaticProps) => {
+  return (
+    <View style={[styles.fruitTag, { backgroundColor: color }]}>
+      <Text>
+        {name}
+      </Text>
+    </View>
+  )
+}
 
 const styles = StyleSheet.create({
   fruitTag: {
-    borderRadius: 3,
-    height: 16,
+    borderRadius: 5,
+    height: 20,
     width: 'auto',
     elevation: 2,
   }

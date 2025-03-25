@@ -119,7 +119,7 @@ export const TestPage = ({ navigation }: Props) => {
               sections={list}
               keyExtractor={(item, index) => item + index}
               renderItem={({ item, section }) => (
-                <FruitTag name={item} color={section.color} func={() => { setSelling([...selling, item]) }}></FruitTag>
+                <FruitTag name={item} color={section.color} func={() => { if (!selling.includes(item)) {setSelling([...selling, item]) }}}></FruitTag>
               )}
               renderSectionHeader={({ section: { title } }) => (
                 <Text>{title}</Text>
